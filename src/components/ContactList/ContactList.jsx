@@ -2,8 +2,11 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteContactByName } from '../../contactsApi/contactsApi';
 import { ContactListContainer, ContactListItem, DeleteButton } from './ContactList.styled';
+import { selectIsAuthenticated } from '../../redux/authApi/authSlice';
 
-function ContactList() {
+const ContactList = () => {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
   const contacts = useSelector((state) => state.contacts.items);
   const filter = useSelector((state) => state.contacts.filter);
   const dispatch = useDispatch();
@@ -27,20 +30,26 @@ function ContactList() {
 
   return (
     <ContactListContainer>
-      {filteredContacts.length === 0 ? (
-        <p>No contacts found.</p>
+      {isAuthenticated ? (
+        filteredContacts.length === 0 ? (
+          <p>No contacts found.</p>
+        ) : (
+          <ul>
+            {filteredContacts.map((contact) => (
+              <ContactListItem key={contact.id}>
+                {contact.name}: {contact.number}
+                <DeleteButton onClick={() => handleDelete(contact.name)}>
+                  Delete
+                </DeleteButton>
+              </ContactListItem>
+            ))}
+          </ul>
+        )
       ) : (
-        <ul>
-          {filteredContacts.map((contact) => (
-            <ContactListItem key={contact.id}>
-              {contact.name}: {contact.number}
-              <DeleteButton onClick={() => handleDelete(contact.name)}>Delete</DeleteButton>
-            </ContactListItem>
-          ))}
-        </ul>
+        <p>Please log in to see your contacts.</p>
       )}
     </ContactListContainer>
   );
-}
+};
 
 export default ContactList;
