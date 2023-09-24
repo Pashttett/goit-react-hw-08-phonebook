@@ -75,8 +75,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const loginEndpoint = 'https://connections-api.herokuapp.com/users/login';
+
     try {
-      await dispatch(loginAsync(credentials));
+      const response = await dispatch(loginAsync(credentials, loginEndpoint));
+      console.log('Login successful:', response);
       navigate('/contacts');
     } catch (error) {
       console.error('Login failed:', error);
