@@ -1,12 +1,19 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { logoutAsync } from '../../redux/authApi/authApi';
+import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch(logoutAsync());
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutAsync());
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return <button onClick={handleLogout}>Logout</button>;

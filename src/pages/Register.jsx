@@ -70,9 +70,16 @@ const Register = () => {
     setCredentials({ ...credentials, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(registerAsync(credentials));
+    const registerEndpoint = 'https://connections-api.herokuapp.com/users/register';
+
+    try {
+      const response = await dispatch(registerAsync(credentials, registerEndpoint));
+      console.log('Registration successful:', response);
+    } catch (error) {
+      console.error('Error during registration:', error);
+    }
   };
 
   return (

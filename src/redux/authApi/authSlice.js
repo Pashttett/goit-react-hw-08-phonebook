@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { loginAsync, fetchCurrentAsync, logoutAsync } from './authApi';
+import axios from 'axios';
 
 const initialState = {
   user: null,
@@ -8,7 +9,13 @@ const initialState = {
   error: null,
 };
 
-const authSlice = createSlice({
+const getToken = () => localStorage.getItem('token');
+
+axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
+axios.defaults.headers.common['Authorization'] = `Bearer ${getToken()}`;
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
+export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {},
@@ -18,6 +25,8 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
+
+        localStorage.setItem('token', action.payload.token);
       })
       .addCase(fetchCurrentAsync.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -28,6 +37,8 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
+
+        localStorage.removeItem('token');
       });
   },
 });

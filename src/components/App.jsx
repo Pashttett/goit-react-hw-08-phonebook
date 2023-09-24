@@ -1,13 +1,13 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navigation from './Navigation/Navigation';
-import Logout from './Logout/Logout';
 import Login from '../pages/Login';
 import Home from '../pages/Home';
 import Contacts from '../pages/Contacts';
 import Register from '../pages/Register';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '../redux/authApi/authSlice';
+import Logout from './Logout/Logout';
 
 const App = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);

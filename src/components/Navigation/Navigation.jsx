@@ -1,13 +1,20 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { logoutAsync } from '../../redux/authApi/authApi';
 import { Header, NavigationList, NavigationItem, NavigationLink, LogoutButton } from './Navigation.styled';
+import { logoutAsync } from '../../redux/authApi/authApi';
+import { useNavigate } from 'react-router-dom';
 
 const Navigation = ({ isAuthenticated }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch(logoutAsync());
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutAsync());
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
   
   return (

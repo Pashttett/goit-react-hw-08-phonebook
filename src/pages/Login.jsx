@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { loginAsync } from '../redux/authApi/authApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAsync, selectAuthError } from '../redux/authApi/authApi';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -57,15 +57,16 @@ const StyledLoginForm = styled.form`
   }
 `;
 
-
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();  // Initialize useNavigate
+  const navigate = useNavigate();
 
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
   });
+
+  const authError = useSelector(selectAuthError);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,6 +97,8 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </StyledLoginForm>
+
+      {authError && <p style={{ color: 'red' }}>{authError}</p>}
 
       <p>
         Don't have an account? <Link to="/register">Register here.</Link>

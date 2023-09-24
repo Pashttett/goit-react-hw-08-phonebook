@@ -5,7 +5,8 @@ axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
 
 export const registerAsync = createAsyncThunk('auth/register', async (credentials) => {
   try {
- const response = await axios.post('/users/register', credentials);
+    const response = await axios.post('/users/register', credentials);
+    console.log('Registration successful:', response);
     return response.data;
   } catch (error) {
     throw new Error('Error registering. Please try again.');
@@ -40,3 +41,5 @@ export const fetchCurrentAsync = createAsyncThunk('auth/fetchCurrentUser', async
 });
 
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
+
+export const selectAuthError = (state) => state.auth.error;
