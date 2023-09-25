@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginAsync } from '../redux/authApi/authApi';
+import { loginAsync, getCurrentUserAsync } from '../redux/authApi/authApi';
+import { setAuthHeader } from '../redux/authApi/authApi';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -57,7 +58,6 @@ const StyledLoginForm = styled.form`
   }
 `;
 
-
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,13 +75,16 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(loginAsync(credentials));
+      const response = await dispatch(loginAsync(credentials));
+      localStorage.setItem('token', response.payload.token);
+      setAuthHeader(response.payload.token);
+      await dispatch(getCurrentUserAsync());
       navigate('/contacts');
     } catch (error) {
       console.error('Login failed:', error);
     }
   };
-
+  
   return (
     <div>
       <h2>Login</h2>

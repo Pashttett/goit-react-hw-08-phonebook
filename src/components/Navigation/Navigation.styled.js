@@ -56,4 +56,23 @@ const LogoutButton = styled.button`
   }
 `;
 
-export { Header, NavigationList, NavigationItem, NavigationLink, LogoutButton };
+const RegisterButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  padding: 5px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+  }
+
+  &:active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+  }
+`;
+
+export { Header, NavigationList, NavigationItem, NavigationLink, LogoutButton, RegisterButton };

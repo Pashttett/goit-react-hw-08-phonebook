@@ -16,7 +16,7 @@ const Navigation = ({ isAuthenticated }) => {
       console.error('Logout failed:', error);
     }
   };
-  
+
   return (
     <Header>
       <NavigationList>
@@ -36,6 +36,11 @@ const Navigation = ({ isAuthenticated }) => {
         {!isAuthenticated && (
           <NavigationItem>
             <NavigationLink to="/login">Login</NavigationLink>
+          </NavigationItem>
+        )}
+        {!isAuthenticated && (
+          <NavigationItem>
+            <NavigationLink to="/register">Register</NavigationLink>
           </NavigationItem>
         )}
       </NavigationList>

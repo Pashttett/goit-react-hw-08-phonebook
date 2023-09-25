@@ -4,16 +4,22 @@ import axios from 'axios';
 const apiUrl = 'https://connections-api.herokuapp.com';
 
 const setAuthHeader = (token) => {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
 };
 
 const clearAuthHeader = () => {
-  delete axios.defaults.headers.common['Authorization'];
+  axios.defaults.headers.common['Authorization'] = null;
 };
 
-export const registerAsync = createAsyncThunk('auth/register', async (credentials) => {
+const registerAsync = createAsyncThunk('auth/register', async (credentials) => {
   try {
     const response = await axios.post(`${apiUrl}/users/signup`, credentials);
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('isAuthenticated', 'true');
     setAuthHeader(response.data.token);
     return response.data;
   } catch (error) {
@@ -21,9 +27,11 @@ export const registerAsync = createAsyncThunk('auth/register', async (credential
   }
 });
 
-export const loginAsync = createAsyncThunk('auth/login', async (credentials) => {
+const loginAsync = createAsyncThunk('auth/login', async (credentials) => {
   try {
     const response = await axios.post(`${apiUrl}/users/login`, credentials);
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('isAuthenticated', 'true');
     setAuthHeader(response.data.token);
     return response.data;
   } catch (error) {
@@ -31,14 +39,24 @@ export const loginAsync = createAsyncThunk('auth/login', async (credentials) => 
   }
 });
 
-export const logoutAsync = createAsyncThunk('auth/logout', async () => {
+const logoutAsync = createAsyncThunk('auth/logout', async () => {
   try {
     await axios.post(`${apiUrl}/users/logout`);
     clearAuthHeader();
+    localStorage.removeItem('token');
+    localStorage.setItem('isAuthenticated', 'false');
   } catch (error) {
     throw new Error('Error logging out. Please try again.');
   }
 });
 
-export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
-export const selectAuthError = (state) => state.auth.error;
+const getCurrentUserAsync = createAsyncThunk('auth/currentUser', async () => {
+  try {
+    const response = await axios.get(`${apiUrl}/users/current`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Error fetching current user. Please try again.');
+  }
+});
+
+export { setAuthHeader, clearAuthHeader, registerAsync, loginAsync, logoutAsync, getCurrentUserAsync };

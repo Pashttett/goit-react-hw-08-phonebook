@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { registerAsync } from '../redux/authApi/authApi';
-import { Link } from 'react-router-dom';
+import { registerAsync, getCurrentUserAsync } from '../redux/authApi/authApi';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledRegisterForm = styled.form`
@@ -59,10 +59,12 @@ const StyledRegisterForm = styled.form`
 
 const Register = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
-    name: ''
+    name: '',
   });
 
   const handleChange = (e) => {
@@ -70,15 +72,25 @@ const Register = () => {
     setCredentials({ ...credentials, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(registerAsync(credentials));
+    try {
+      await dispatch(registerAsync(credentials));
+      await dispatch(getCurrentUserAsync());
+      navigate('/contacts');
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
   };
 
   return (
     <div>
       <h2>Register</h2>
       <StyledRegisterForm onSubmit={handleSubmit}>
+        <div>
+          <label>Name:</label>
+          <input type="text" name="name" value={credentials.name} onChange={handleChange} />
+        </div>
         <div>
           <label>Email:</label>
           <input type="email" name="email" value={credentials.email} onChange={handleChange} />
@@ -87,14 +99,12 @@ const Register = () => {
           <label>Password:</label>
           <input type="password" name="password" value={credentials.password} onChange={handleChange} />
         </div>
-        <div>
-          <label>Name:</label>
-          <input type="text" name="name" value={credentials.name} onChange={handleChange} />
-        </div>
         <button type="submit">Register</button>
       </StyledRegisterForm>
 
-      <p>Already have an account? <Link to="/login">Login here.</Link></p>
+      <p>
+        Already have an account? <Link to="/login">Login here.</Link>
+      </p>
     </div>
   );
 };

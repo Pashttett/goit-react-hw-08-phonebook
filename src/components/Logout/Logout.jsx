@@ -10,6 +10,9 @@ const Logout = () => {
   const handleLogout = async () => {
     try {
       await dispatch(logoutAsync());
+      localStorage.removeItem('token');
+      localStorage.removeItem('isAuthenticated');
+      clearAuthHeader();
       navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
