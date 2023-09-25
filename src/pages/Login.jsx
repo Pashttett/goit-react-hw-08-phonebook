@@ -11,7 +11,6 @@ const StyledLoginForm = styled.form`
   justify-content: center;
   margin-bottom: 20px;
   gap: 20px;
-
   label {
     display: flex;
     flex-direction: column;
@@ -20,7 +19,6 @@ const StyledLoginForm = styled.form`
     width: 300px;
     margin: auto;
   }
-
   input {
     padding: 8px;
     font-size: 16px;
@@ -29,7 +27,6 @@ const StyledLoginForm = styled.form`
     outline: none;
     width: 100%;
   }
-
   button {
     padding: 12px 12px;
     font-size: 16px;
@@ -43,15 +40,12 @@ const StyledLoginForm = styled.form`
     transition: background-color 0.3s;
     margin: auto;
   }
-
   button:hover {
     background-color: #004d00;
   }
-
   button:focus {
     background-color: #003366;
   }
-
   button:active {
     background-color: #800000;
   }
@@ -60,7 +54,7 @@ const StyledLoginForm = styled.form`
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();  // Initialize useNavigate
+  const navigate = useNavigate();
 
   const [credentials, setCredentials] = useState({
     email: '',

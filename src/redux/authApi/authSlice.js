@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginAsync, fetchCurrentAsync, logoutAsync } from './authApi';
+import { registerAsync, loginAsync, logoutAsync } from './authApi';
 
 const initialState = {
   user: null,
   isAuthenticated: false,
+  token: null,
   isLoading: false,
   error: null,
 };
@@ -14,20 +15,23 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(registerAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.user = action.payload;
+        state.token = action.payload.token;
+      })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
-      })
-      .addCase(fetchCurrentAsync.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isAuthenticated = true;
-        state.user = action.payload;
+        state.token = action.payload.token;
       })
       .addCase(logoutAsync.fulfilled, (state) => {
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
+        state.token = null;
       });
   },
 });
