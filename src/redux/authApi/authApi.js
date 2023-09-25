@@ -40,14 +40,5 @@ export const logoutAsync = createAsyncThunk('auth/logout', async () => {
   }
 });
 
-export const fetchCurrentAsync = createAsyncThunk('auth/fetchCurrentUser', async () => {
-  try {
-    const response = await axios.get(`${apiUrl}/users/current`);
-    return response.data;
-  } catch (error) {
-    throw new Error('Error fetching user data. Please try again.');
-  }
-});
-
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const selectAuthError = (state) => state.auth.error;
