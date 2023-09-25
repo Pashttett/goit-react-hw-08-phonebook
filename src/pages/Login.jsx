@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginAsync, selectAuthError } from '../redux/authApi/authApi';
+import { useDispatch } from 'react-redux';
+import { loginAsync } from '../redux/authApi/authApi';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -11,6 +11,7 @@ const StyledLoginForm = styled.form`
   justify-content: center;
   margin-bottom: 20px;
   gap: 20px;
+
   label {
     display: flex;
     flex-direction: column;
@@ -19,6 +20,7 @@ const StyledLoginForm = styled.form`
     width: 300px;
     margin: auto;
   }
+
   input {
     padding: 8px;
     font-size: 16px;
@@ -27,6 +29,7 @@ const StyledLoginForm = styled.form`
     outline: none;
     width: 100%;
   }
+
   button {
     padding: 12px 12px;
     font-size: 16px;
@@ -40,16 +43,20 @@ const StyledLoginForm = styled.form`
     transition: background-color 0.3s;
     margin: auto;
   }
+
   button:hover {
     background-color: #004d00;
   }
+
   button:focus {
     background-color: #003366;
   }
+
   button:active {
     background-color: #800000;
   }
 `;
+
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -60,8 +67,6 @@ const Login = () => {
     password: '',
   });
 
-  const authError = useSelector(selectAuthError);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
@@ -69,11 +74,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const loginEndpoint = 'https://connections-api.herokuapp.com/users/login';
-
     try {
-      const response = await dispatch(loginAsync(credentials, loginEndpoint));
-      console.log('Login successful:', response);
+      await dispatch(loginAsync(credentials));
       navigate('/contacts');
     } catch (error) {
       console.error('Login failed:', error);
@@ -94,8 +96,6 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </StyledLoginForm>
-
-      {authError && <p style={{ color: 'red' }}>{authError}</p>}
 
       <p>
         Don't have an account? <Link to="/register">Register here.</Link>
