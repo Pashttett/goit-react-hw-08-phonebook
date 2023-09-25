@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerAsync, loginAsync, logoutAsync } from './authApi';
+import { registerAsync, loginAsync, logoutAsync, fetchCurrentAsync } from './authApi';
 
 const initialState = {
   user: null,
@@ -32,6 +32,10 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;
+      })
+      .addCase(fetchCurrentAsync.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
       });
   },
 });

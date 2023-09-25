@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { loginAsync } from '../redux/authApi/authApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAsync, selectAuthError } from '../redux/authApi/authApi';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -51,7 +51,6 @@ const StyledLoginForm = styled.form`
   }
 `;
 
-
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,6 +60,8 @@ const Login = () => {
     password: '',
   });
 
+  const authError = useSelector(selectAuthError);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
@@ -68,8 +69,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const loginEndpoint = 'https://connections-api.herokuapp.com/users/login';
+
     try {
-      await dispatch(loginAsync(credentials));
+      const response = await dispatch(loginAsync(credentials, loginEndpoint));
+      console.log('Login successful:', response);
       navigate('/contacts');
     } catch (error) {
       console.error('Login failed:', error);
@@ -90,6 +94,8 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </StyledLoginForm>
+
+      {authError && <p style={{ color: 'red' }}>{authError}</p>}
 
       <p>
         Don't have an account? <Link to="/register">Register here.</Link>
